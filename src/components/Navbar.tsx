@@ -1,85 +1,95 @@
-import { useState } from 'react'
-import { Link, NavLink } from 'react-router-dom'
-import { Menu, X } from 'lucide-react'
-import { motion, AnimatePresence } from 'framer-motion'
-
-const navLinks = [
-  { to: '/', label: 'About' },
-  { to: '/classes', label: 'Classes' },
-  { to: '/teachers', label: 'Teachers' },
-  { to: '/contact', label: 'Contact' },
-]
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 
 export function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location]);
+
+  const navLinks = [
+    { to: '/', label: 'Home' },
+    { to: '/classes', label: 'Classes' },
+    { to: '/teachers', label: 'Teachers' },
+    { to: '/contact', label: 'Contact' },
+  ];
+
+  const isActive = (path: string) => location.pathname === path;
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-warm-200 bg-warm-50/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-6">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-warm-500 text-white">
-            <span className="text-lg font-bold">T</span>
-          </div>
-          <span className="text-xl font-bold tracking-tight text-stone-800">Toddler</span>
-        </Link>
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        scrolled || isOpen ? 'glass-nav shadow-mountain' : 'bg-transparent'
+      }`}
+    >
+      <div className="max-w-[1400px] mx-auto px-6 md:px-10">
+        <div className="flex items-center justify-between h-20">
+          <Link to="/" className="font-serif text-2xl text-on-surface tracking-display">
+            Mountain
+          </Link>
 
-        <nav className="hidden md:flex md:items-center md:gap-1">
-          {navLinks.map((link) => (
-            <NavLink
-              key={link.to}
-              to={link.to}
-              className={({ isActive }) =>
-                `rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'bg-warm-100 text-warm-800'
-                    : 'text-stone-600 hover:bg-warm-100 hover:text-stone-900'
-                }`
-              }
+          <div className="hidden md:flex items-center gap-10">
+            {navLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`font-sans text-xs uppercase tracking-nav font-semibold transition-colors duration-300 ${
+                  isActive(link.to)
+                    ? 'text-primary'
+                    : 'text-on-surface hover:text-primary'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <Link
+              to="/contact"
+              className="btn-primary text-xs uppercase tracking-nav"
             >
-              {link.label}
-            </NavLink>
-          ))}
-        </nav>
+              Enroll Now
+            </Link>
+          </div>
 
-        <button
-          onClick={() => setIsOpen(!isOpen)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg text-stone-600 hover:bg-warm-100 md:hidden"
-          aria-label="Toggle menu"
-        >
-          {isOpen ? <X size={20} /> : <Menu size={20} />}
-        </button>
+          <button
+            className="md:hidden text-on-surface p-2"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </div>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden border-t border-warm-200 bg-warm-50 md:hidden"
-          >
-            <nav className="flex flex-col gap-1 px-4 py-4">
-              {navLinks.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  onClick={() => setIsOpen(false)}
-                  className={({ isActive }) =>
-                    `rounded-lg px-4 py-3 text-sm font-medium transition-colors ${
-                      isActive
-                        ? 'bg-warm-100 text-warm-800'
-                        : 'text-stone-600 hover:bg-warm-100 hover:text-stone-900'
-                    }`
-                  }
-                >
-                  {link.label}
-                </NavLink>
-              ))}
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </header>
-  )
+      {isOpen && (
+        <div className="md:hidden glass-nav border-t border-white/10">
+          <div className="px-6 py-8 flex flex-col gap-6">
+            {navLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`font-sans text-sm uppercase tracking-nav font-semibold ${
+                  isActive(link.to) ? 'text-white' : 'text-white/80'
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+            <Link to="/contact" className="btn-primary text-xs uppercase tracking-nav mt-2 w-full">
+              Enroll Now
+            </Link>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
 }

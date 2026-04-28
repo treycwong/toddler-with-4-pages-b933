@@ -6,34 +6,38 @@ export default {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['Outfit', 'system-ui', 'sans-serif'],
-      },
       colors: {
-        warm: {
-          50: '#FFFBF5',
-          100: '#FFF5E6',
-          200: '#FFE4C4',
-          300: '#FFD1A3',
-          400: '#FFB366',
-          500: '#F59E0B',
-          600: '#D97706',
-          700: '#B45309',
-          800: '#92400E',
-          900: '#78350F',
+        primary: {
+          DEFAULT: '#2d5235',
+          container: '#456a4b',
+          fixed: '#456a4b',
+          'fixed-dim': '#2d5235',
         },
-        sage: {
-          50: '#F4F7F4',
-          100: '#E3EBE3',
-          200: '#C5D6C5',
-          300: '#9BB89B',
-          400: '#729A72',
-          500: '#527A52',
-          600: '#3D5F3D',
-          700: '#2F4A2F',
-          800: '#223622',
-          900: '#182618',
+        surface: {
+          DEFAULT: '#fefae6',
+          'container-low': '#f8f4e0',
+          'container-lowest': '#f0ecd8',
+          'container-highest': '#e6e3cf',
         },
+        secondary: '#605f50',
+        'on-surface': '#1d1c10',
+        'on-primary': '#ffffff',
+        outline: {
+          DEFAULT: '#605f50',
+          variant: 'rgba(96, 95, 80, 0.15)',
+        },
+      },
+      fontFamily: {
+        serif: ['"Noto Serif"', 'Georgia', 'serif'],
+        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+      },
+      boxShadow: {
+        'mountain-mist': '0 4px 60px -10px rgba(29, 28, 16, 0.05)',
+      },
+      letterSpacing: {
+        'display': '0.02em',
+        'eyebrow': '0.1em',
+        'nav': '0.15em',
       },
     },
   },
